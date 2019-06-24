@@ -1,0 +1,10 @@
+﻿I'm sorry, but errors were detected in your script. Please correct the
+errors listed below, and try again.
+
+
+File "game/script.rpy", line 12: expected '=' not found.
+    define player
+                 ^
+
+Ren'Py Version: Ren'Py 7.3.0.271
+Mon Jun 24 10:37:06 2019
