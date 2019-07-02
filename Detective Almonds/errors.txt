@@ -2,9 +2,7 @@
 errors listed below, and try again.
 
 
-File "game/script.rpy", line 12: expected '=' not found.
-    define player
-                 ^
+File "game/script.rpy", line 104: Tab characters are not allowed in Ren'Py scripts.
 
 Ren'Py Version: Ren'Py 7.3.0.271
-Mon Jun 24 10:37:06 2019
+Tue Jul 02 08:42:33 2019

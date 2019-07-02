@@ -1,4 +1,15 @@
 ﻿# The script of the game goes in this file.
+#python:
+#    class DeskInvestigation:
+#       def __init__(self):
+#            self.searchedbody = False
+#            self.searcheddesk = False
+#            self.talkedisabelle = False
+#            self.talkedresetti = False
+
+#       def isFinished(self):
+#           return self.searchedbody and self.searcheddesk and self.talkedisabelle and self.talkedresetti
+
 
 # Declare characters used by this game. The color argument colorizes the
 # name of the character.
@@ -9,7 +20,10 @@ define resetti = Character("Mr.Resetti")
 define tom = Character("Tom Nook")
 define hazel = Character("Hazel")
 define doctor = Character("Doctor")
-
+default searchedbody = False
+default searcheddesk = False
+default talkedisabelle = False
+default talkedresetti = False
 # The game starts here.
 
 label start:
@@ -91,12 +105,7 @@ label next:
     return
 
 label investigation:
-    $ searchedbody = False
-    $ searcheddesk = False
-    $ talkedisabelle = False
-    $ talkedresetti = False
-    
-    if not searchedbody or not searcheddesk or not searcheddesk or not searcheddesk:
+    while not searchedbody or not searcheddesk or not talkedisabelle or not talkedresetti:
         menu:
             "What should I investigate?"
             
@@ -104,26 +113,42 @@ label investigation:
                 jump body
             "Desk" if not searcheddesk:
                 jump desk
-            "Isabelle" if not talkedisabelle:
+            "Talk to Isabelle" if not talkedisabelle:
+	            $ talkedisabelle = True
+	            isabelle "I cannot believe this..."
                 jump isabelleinvest
-            "Mr.Resetti" if not talkedresetti:
+            "Talk to Mr.Resetti" if not talkedresetti:
                 jump resettiinvest
     #jump finishedoffice
     return
 
 label body:
+    $ searchedbody = True
     "You approch the body and notice several things:"
     "1) The victim appear to have died from asphyxiation"
     "2) There is a smell of almonds near the victim's mouth"
-    "3) That same almond smell is on a muffic, next to the mayor, half eaten"
+    "3) That same almond smell is on a muffin, next to the mayor, half eaten"
     jump investigation
     return
 
 label desk:
+    $ searcheddesk = True
     player "Hmm, what's this basket on the desk?"
     show basket
     isabelle "Oh, that was a gift the mayor got for his birthday. I think he received it during his last meeting."
     player "Interesting"
+	"You notice a note on the basket"
+	show note
+	return
+
+default askedSchedule = False
+default askedIsabelleEnnemy = False
+label isabelleinvest:
+	while not askedSchedule or not askedIsabelleEnnemy:
+	    menu:
+		    "Who did the mayor met with today":
+			    $ askedSchedule = True
+				isabelle "Well, I do not have his merr"
 
         
 
