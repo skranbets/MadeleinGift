@@ -143,12 +143,21 @@ label desk:
 
 default askedSchedule = False
 default askedIsabelleEnnemy = False
+
 label isabelleinvest:
 	while not askedSchedule or not askedIsabelleEnnemy:
 	    menu:
-		    "Who did the mayor met with today":
+		    "Who did the mayor met with today?":
 			    $ askedSchedule = True
-				isabelle "Well, I do not have his merr"
+				isabelle "Well, I do not have his meetings memorized, but I do have a list of it."
+				jump isabelleinvest
+			"Did the mayor have any ennemies?":
+			    $ askedIsabelleEnnemy = True
+				jump isabelleinvest
+
+label resettiinvest:
+
+
 
         
 
