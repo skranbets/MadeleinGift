@@ -50,7 +50,7 @@ label start:
     python:
         name = renpy.input("Please enter your name")
     define player = Character("[name]")
-    isabelle "Okay, [name]... Oh yes, I see you on the list. You can head right in, the mayor is waiting for you"
+    isabelle "Okay, [name]... Oh yes, I see you on the list. You can head right in, the mayor is waiting for you."
     hide isabellehappy
     "{i}You walk to the mayor's office and you knock on the door{/i}"
     "Knock Knock Knock"
@@ -70,14 +70,14 @@ label start:
     "{i}Click clang{/i}"
     #play sound "trying to open a locked door"
     
-    isabelle "it's locked... well, good thing Mr.Resetti has the key. Let me call him"
+    isabelle "it's locked... well, good thing Mr.Resetti has the key. Let me call him."
     hide worriedisabelle
     #play sound "phone sound"
     "After a few minutes, Mr. Resetti came."
     show resettiangry
-    resetti "So the dummy locked himself in the office again? God, I should just get rid of that lock, make thing easier"
-    isabelle "I'm sorry, Mr.Resetti, may you please open the door"
-    resetti "Fine"
+    resetti "So the dummy locked himself in the office again? God, I should just get rid of that lock, make thing easier."
+    isabelle "I'm sorry, Mr.Resetti, may you please open the door."
+    resetti "Fine."
     "{i}Click{/i}"
     #play sound "trying to open a locked door"
     scene office with Dissolve(.5)
@@ -89,7 +89,7 @@ label start:
         "I think he is...":
             jump next
 
-        "Nah, he's just sleeping":
+        "Nah, he's just sleeping.":
             jump joke
 
 label joke:
@@ -118,6 +118,7 @@ label investigation:
 	            isabelle "I cannot believe this..."
                 jump isabelleinvest
             "Talk to Mr.Resetti" if not talkedresetti:
+			    resetti "Urg... what a mess"
                 jump resettiinvest
     #jump finishedoffice
     return
@@ -136,8 +137,8 @@ label desk:
     player "Hmm, what's this basket on the desk?"
     show basket
     isabelle "Oh, that was a gift the mayor got for his birthday. I think he received it during his last meeting."
-    player "Interesting"
-	"You notice a note on the basket"
+    player "Interesting."
+	"You notice a note on the basket."
 	show note
 	return
 
@@ -153,9 +154,20 @@ label isabelleinvest:
 				jump isabelleinvest
 			"Did the mayor have any ennemies?":
 			    $ askedIsabelleEnnemy = True
+				isabelle "Oh heavens no, the mayor is very popular."
+				isabelle "In fact, he is always actively involved with the community. Every body loves him."
+				player "Well, he is a mayor, doesn't that mean he has to be the bad guy at times? Like firing staff or denying legislation?"
+				isabelle "Well, since mayor is always trying to please everyone, he doesn't enjoy bringing bad news."
+				player "So who does then?"
+				isabelle "That would be me... I'm in charge of everything the mayor does not want to handle."
+				player "I see, thank you for your time."
 				jump isabelleinvest
 
+
+
 label resettiinvest:
+    player "This is a true tragedy."
+	resetti "Yeah... I feel really bad comme."
 
 
 
