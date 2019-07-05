@@ -162,20 +162,36 @@ label isabelleinvest:
 				isabelle "That would be me... I'm in charge of everything the mayor does not want to handle."
 				player "I see, thank you for your time."
 				jump isabelleinvest
+	jump endofscene1
+	return
 
 
 
 label resettiinvest:
     player "This is a true tragedy."
-	resetti "Yeah... I feel really bad comme."
+	resetti "Yeah... I feel really bad about my comment now."
+	player "About that, does the mayor lock himself in his office a lot?"
+	resetti "Not exactly, he rarely locks himself in, but he does lock the doors when he isn't supposed to."
+	player "What do you mean?"
+	resetti "Look, between us two, the mayor isn't exactly your model employee."
+	resetti "More often than not, the guy leaves halfway through the day and leaves everything to the secretary."
+	resetti "However, he alwasy locks his office and since he's the only one with the key, that leaves poor Isabelle locked out."
+	resetti "And since she needs some documents in the office, she calls me to unlock the office, it's become a routine at this point."
+	player "Ahh, I see what you mean. I now understand your frustration."
+	player "Thank you for your time"
+	jump endofscene1
+	return
 
+label endofscene1:
+    isabelle "Excuse me Detective [name], but have you reached a conclusion yet?"
+	player "It's a bit early for me to pass judgement right now, I think I need to follow up a few more leads."
+	jump choicemenu
+	return
 
-
-        
-
-
+label choicemenu:
     
-    
+
+
     # This ends the game.
 return
     
