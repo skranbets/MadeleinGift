@@ -234,6 +234,18 @@ label nookShop:
 	jump nookmenu
 	return
 
+default chosenDeath = False
+default chosenAlmond = False
+default choseNote = False
+default chosenRole = False
+default chosenPamphelet = False
+default chosenReceipt = False
+default chosenThankYou = False
+default chosenDebt = False
+default chosenDoctor = False
+default chosenEpipen = False
+default chosenLunch = False
+default chosenRing = False
 label nookmenu:
     menu:
 	    "What is that smell?":
@@ -245,7 +257,44 @@ label nookmenu:
 				     jump evidencemenu
 
 
-
+label evidencemenu:
+    $ chosenDeath = False
+    $ chosenAlmond = False
+    $ choseNote = False
+    $ chosenRole = False
+    $ chosenPamphelet = False
+    $ chosenReceipt = False
+    $ chosenThankYou = False
+    $ chosenDebt = False
+    $ chosenDoctor = False
+    $ chosenEpipen = False
+    $ chosenLunch = False
+    $ chosenRing = False
+    menu:
+	    "Cause of death":
+		   pass
+	    "Smell of almonds":
+		   pass
+	    "Note of the basket":
+		   pass
+	    "Role of Isabelle":
+		   pass
+	    "Pamphelet":
+		   pass
+	    "Tom Nook's receipt":
+		   pass
+	    "Isabelle's Thank you note":
+		   pass
+	    "Kitty's testimony on the mayor's debt":
+		   pass
+	    "doctor's note":
+		   pass
+	    "Epipen":
+		   pass
+	    "Hazel's testimony":
+		   pass
+	    "Ring":
+		   pass
     # This ends the game.
 return
     
