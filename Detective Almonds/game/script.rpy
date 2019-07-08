@@ -105,7 +105,7 @@ label next:
     return
 
 label investigation:
-    while not searchedbody or not searcheddesk or not talkedisabelle or not talkedresetti:
+    if not searchedbody or not searcheddesk or not talkedisabelle or not talkedresetti:
         menu:
             "What should I investigate?"
             
@@ -127,8 +127,10 @@ label body:
     $ searchedbody = True
     "You approch the body and notice several things:"
     "1) The victim appear to have died from asphyxiation"
+	"{i}{b}Cause of death {\b} is recorded in your notebook{/i}"
     "2) There is a smell of almonds near the victim's mouth"
     "3) That same almond smell is on a muffin, next to the mayor, half eaten"
+	"{i}{b}Smell of almonds{\b} is recorded in your notebook{/i}"
     jump investigation
     return
 
@@ -139,20 +141,21 @@ label desk:
     isabelle "Oh, that was a gift the mayor got for his birthday. I think he received it during his last meeting."
     player "Interesting."
 	"You notice a note on the basket."
-	show note
+	#show note
+	"{i}{b} Basket note{\b} is recorded in your notebook{/i}"
 	return
 
 default askedSchedule = False
 default askedIsabelleEnnemy = False
 
 label isabelleinvest:
-	while not askedSchedule or not askedIsabelleEnnemy:
+	if not askedSchedule or not askedIsabelleEnnemy:
 	    menu:
-		    "Who did the mayor met with today?":
+		    "Who did the mayor met with today?" is not askedSchedule:
 			    $ askedSchedule = True
 				isabelle "Well, I do not have his meetings memorized, but I do have a list of it."
 				jump isabelleinvest
-			"Did the mayor have any ennemies?":
+			"Did the mayor have any ennemies?" is not askedIsabelleEnnemy:
 			    $ askedIsabelleEnnemy = True
 				isabelle "Oh heavens no, the mayor is very popular."
 				isabelle "In fact, he is always actively involved with the community. Every body loves him."
@@ -161,6 +164,7 @@ label isabelleinvest:
 				player "So who does then?"
 				isabelle "That would be me... I'm in charge of everything the mayor does not want to handle."
 				player "I see, thank you for your time."
+	            "{i}{b}Role of Isabelle{\b} is recorded in your notebook{/i}"
 				jump isabelleinvest
 	jump endofscene1
 	return
@@ -188,8 +192,58 @@ label endofscene1:
 	jump choicemenu
 	return
 
+
+default currentKitty = False
+default currentHazel = False
+default currentHospital = False
+default currentShop = False 
 label choicemenu:
-    
+    menu:
+		"Where should I go next?"
+
+	    "Go to Tom Nook's shop" if not currentShop:
+		jump nookShop
+
+	    "Go to the hospital" if not currentHospital:
+		jump hospital
+
+		"Go talk to Hazel" if not currentHazel:
+		jump hazelpicnic
+
+		"Go talk to Kitty" if not currentKitty:
+		jump kitty
+	return
+
+
+# scene two
+label nookShop:
+    #new sceneries
+	#tom nook enters
+	"As you enters the shop, a strong scent of almonds assualts your senses."
+	"The shop is empty, no traces of any customer nor shopkeepers."
+	player "Hello? Is anyone here?"
+	"???" "Just a moment, be right there!"
+	"From the backroom behind the counter, a tanuki appearsk, with a little blue apron."
+	"???" "Sorry to keep you waiting. I was working in the back."
+	"???" "Hmm. I never seen your face around here, you must be new around town."
+	"???" "Lemme introduce myself, I'm Tom Nook, the local shopkeeper."
+	player "Nice to meet you Tom."
+	tom "So, what can I do for ya?"
+	player "I just need to ask you a few questions, if you mind."
+	tom "Sure, I have a little bit of time."
+	jump nookmenu
+	return
+
+label nookmenu:
+    menu:
+	    "What is that smell?":
+		    tom "Oh, I'm making some new products in the back, starting my own clothes line."
+			menu:
+			    "What are you using to make the clothes?":
+				    tom "Oh... well, you know, some chemicals, nothing wild."
+				"Present evidence":
+				     jump evidencemenu
+
 
 
     # This ends the game.
