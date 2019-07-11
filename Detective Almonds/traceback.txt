@@ -1,26 +1,22 @@
 ﻿I'm sorry, but an uncaught exception occurred.
 
 While running game code:
-  File "game/script.rpy", line 104, in script
-    
-  File "game/script.rpy", line 105, in <module>
-    label investigation:
-NameError: name 'DeskInvestigation' is not defined
+  File "game/script.rpy", line 141, in script
+    jump investigate
+ScriptError: could not find label 'investigate'.
 
 -- Full Traceback ------------------------------------------------------------
 
 Full traceback:
-  File "game/script.rpy", line 104, in script
-    
-  File "C:\Users\DingT\Documents\renpy-7.3.0-sdk\renpy\ast.py", line 912, in execute
-    renpy.python.py_exec_bytecode(self.code.bytecode, self.hide, store=self.store)
-  File "C:\Users\DingT\Documents\renpy-7.3.0-sdk\renpy\python.py", line 1959, in py_exec_bytecode
-    exec bytecode in globals, locals
-  File "game/script.rpy", line 105, in <module>
-    label investigation:
-NameError: name 'DeskInvestigation' is not defined
+  File "game/script.rpy", line 141, in script
+    jump investigate
+  File "C:\Users\DingT\Documents\renpy-7.3.0-sdk\renpy\ast.py", line 1695, in execute
+    rv = renpy.game.script.lookup(target)
+  File "C:\Users\DingT\Documents\renpy-7.3.0-sdk\renpy\script.py", line 894, in lookup
+    raise ScriptError("could not find label '%s'." % str(original))
+ScriptError: could not find label 'investigate'.
 
 Windows-8-6.2.9200
 Ren'Py 7.3.0.271
 Detective Almonds 1.0
-Tue Jul 02 08:41:16 2019
+Thu Jul 11 14:03:39 2019
