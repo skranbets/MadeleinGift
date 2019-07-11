@@ -27,6 +27,7 @@ default talkedisabelle = False
 default talkedresetti = False
 #Evidence
 
+default hasBody = False
 default hasDeath = False
 default hasAlmond = False
 default hasNote = False
@@ -137,7 +138,7 @@ label investigation:
                 player "Huh, whats this?"
                 #show note
                 player "Looks like a doctor's note... But I can't read this."
-                "{i}{b}Illegible doctor's note{\b} is recorded in your notebook{/i}"
+                "{i}{b}Illegible doctor's note{/b} is recorded in your notebook{/i}"
                 jump investigation
             "Talk to Isabelle" if not talkedisabelle:
                 $ talkedisabelle = True
@@ -152,14 +153,17 @@ label investigation:
 
 label body:
     $ searchedbody = True
-    "You approch the body and notice several things:"
-    "1) The victim appear to have died from asphyxiation"
-    "{i}{b}Cause of death {\b} is recorded in your notebook{/i}"
-    $ hasDeath = True
-    "2) There is a smell of almonds near the victim's mouth"
-    "3) That same almond smell is on a muffin, next to the mayor, half eaten"
-    "{i}{b}Smell of almonds{\b} is recorded in your notebook{/i}"
+    "You approch the body and begin your examination."
+    player "Hmmm, strange. I don't see any injuries on the body."
+    "{i}{b}Victim's Body {/b} is recorded in your notebook{/i}"
+    $ player "I should note everything in my notebook and take a picture for evidence."
+    $ hasBody = True
+    "You put your face closer to the corpse, trying to get a closer look."
+    player "Sniff, Sniff. What's that smell in his mouth? Is that... almonds?"
+    "You realize the smell also originate from a muffin, next to the mayor, half eaten."
+    "{i}{b}Smell of almonds{/b} is recorded in your notebook{/i}"
     $ hasAlmond = True
+    player "Interesting..."
     jump investigation
     return
 
@@ -168,10 +172,11 @@ label desk:
     player "Hmm, what's this basket on the desk?"
     show basket
     isabelle "Oh, that was a gift the mayor got for his birthday. I think he received it during his last meeting."
+    "You take a closer look at the basket, it is filled with muffins, fruits and chocolate."
     player "Interesting."
     "You notice a note on the basket."
     #show note
-    "{i}{b} Basket note{\b} is recorded in your notebook{/i}"
+    "{i}{b} Basket note{/b} is recorded in your notebook{/i}"
     $ hasNote = True
     jump investigation
     return
@@ -195,7 +200,7 @@ label isabelleinvest:
                 player "So who does then?"
                 isabelle "That would be me... I'm in charge of everything the mayor does not want to handle."
                 player "I see, thank you for your time."
-                "{i}{b}Role of Isabelle{\b} is recorded in your notebook{/i}"
+                "{i}{b}Role of Isabelle{/b} is recorded in your notebook{/i}"
                 $ hasRole = True
                 jump isabelleinvest
     jump investigation
@@ -262,8 +267,11 @@ label nookShop:
     "???" "Lemme introduce myself, I'm Tom Nook, the local shopkeeper."
     player "Nice to meet you Tom."
     tom "So, what can I do for ya?"
-    player "I just need to ask you a few questions, if you mind."
-    tom "Sure, I have a little bit of time."
+    player "My name is Detective [name], I'm in charge o fthe ongoing investigation for the Mayor's death."
+    tom "THE MAYOR DIED?!?!"
+    tom "I can't believe it... I just saw him this morning too..."
+    player "I just need to ask you a few questions, if you don't mind."
+    tom "Sure..."
     jump nookmenu
     return
 
@@ -287,30 +295,26 @@ label nookmenu:
             menu:
                 "What are you using to make the clothes?":
                     tom "Oh... well, you know, some chemicals, nothing wild."
-                "Present evidence":
+                "I know what this smell is! (present evidence)":
                     jump evidencemenu
                     if chosenEvidence == 5:
-                        player "{i}Ah, i know what smell this is, the pamphelet mentioned it{/i}"
+                        player "{i}Ah, I know what smell this is, the pamphelet mentioned it{/i}"
                         player "Are you using cyanide?"
                         tom "Wha- How did you know?!?"
                         tom "Truth be told, I am using it. It's a dangerous substance, so I didnt tell people about it."
                         tom "BUT don't worry! I'm using it very carefully, so the fumes aren't poisonous, you don't need to worry!"
-                        "{i}{b}Tom uses cyanide{\b} is recorded in your notebook.{/i}"
+                        "{i}{b}Tom uses cyanide{/b} is recorded in your notebook.{/i}"
                         $ hascyanide = True
+                    else:
+                        tom "Um... Im'm not sure how I can help you with that."
+                        player "{i}I don't think this evidence applies here{/i}"
             jump nookmenu
-        "Did you give the mayor a gift this morning?":
-            tom "I did! It's been 18 years since he's been living in this town, so I gave him a token of my appreciation."
-            player "Was it a gift basket?"
+        "Why did you go see the mayor this morning?":
+            tom "Oh, well, it's been 18 years since he's been living in this town, so I gave him a token of my appreciation."
+            player "what was it?"
             tom "Well, I can't really tell you what the gift was. It's a secret."
-            menu:
-                "{i}Do I have any prrof of Tom's gift?{/i}"
-                "Yes":
-                    jump evidencemenu
-                    if chosenEvidence == 3:
-                        player ""
-                "No":
-                    player "I understand."
-            jump nookmenu
+            giftproof1
+            
 
         "Goodbye.":
             player "Thank you for your time"
@@ -320,6 +324,28 @@ label nookmenu:
             $ currentShop = True 
             jump choicemenu
 
+label giftproof1:
+     menu:
+        "{i}Do I have any proof of Tom's gift?{/i}"
+        "Yes":
+            jump evidencemenu
+            if chosenEvidence == 3:
+                player "You gave the mayor a gift basket with muffins didn't you?"
+                tom "I don't know what you are talking about."
+                player "QUIT LYING! I HAVE A NOTE RIGHT HERE! The basket came from you!"
+                tom "What? This isnt mine!"
+                player "Well, how do you explain the note?"
+                tom "I swear to god, I don't know where it came from. Plus, anyone can write a note!"
+                jump giftproof2
+            else:
+                tom "Um... what is that?"
+                player "Sorry, wrong item."
+                jump giftproof1
+
+        "No":
+            player "{i}I need to gather more evidence to pursue this line of questioning.{/i}"
+            player "I understand."
+            jump nookmenu
 #scene 3
 
 label hospital:
@@ -347,7 +373,58 @@ label hospital:
     "Raddle" "Actually, just Raddle."
     player "Ah... okay"
     player "{i} Note to self, don't get sick here {/i}"
-    player "Anyways, Raddle, I am Detective [name]"
+    player "Anyways, Raddle, I am Detective [name] and I need to ask you a few questions on an ongoing investigation."
+    "Raddle" "Oh my goodness. What happened?"
+    player "The mayor passed away this morning."
+    "Raddle" "Good god... Unbelievable..."
+    player "So for my investigation, I need you to cooperate with me."
+    "Raddle" "Oh, of course detective, how may I help?"
+    jump doctorchoices
+    return
+
+default askedMayorRaddle = False
+label doctorchoices:
+    menu:
+        "Does the mayor comes here often?" if not askedMayorRaddle:
+            askedMayorRaddle = True
+            "Raddle" "Well, not more than usual. The last time I saw him for for his yearly check-up a few weeks ago."
+            player "Oh, was there anything unusual about him?"
+            "Raddle" "Sorry, but I cannot divulge that information. Client confidentiality."
+            "Raddle" "I will say that the mayor sure is a scatter brain."
+            player "What do you mean?"
+            "Raddle" "You see, the very next day after his appointment, he already lost his doctor's note for a prescription. So i had to fax a new copy to his assistant."
+            "{i}{b}Faxed Doctor Notes{/b} is recorded in your notebook.{/i}"
+            jump doctorchoices
+        "Can I ask your opinion on this evidence?":
+            if chosenEvidence == 0:
+                player "I found the body of the president and I was wondering if you could help me determine the cause of death."
+                player "Here's a picture of the body."
+                "Raddle" "Hmm, well, from what i can see here, the mayor seemed to have died from lack of oxygen."
+                player "Really?"
+                "Raddle" "Yeah. I cant really see well because of the picture quality, but the skin's tint is a bit blue, sign of oxygen deprivation."
+                "Raddle" "Tho, I don't really see any bruises on the neck area, making me believe that he wasnt starngled, rather, something caused him to asphyxiate"
+                player "I see."
+                "{i}{b}Victim's Body{/b} is updated to {b}Cause of death{/b} in your notebook.{/i}"
+                $ hasBody = False
+                $ hasDeath = True
+            elif chosenEvidence == 9:
+                player "Can you take a look at this doctor note?"
+                "Raddle" "Sure"
+                "Raddle" "Oh boy... I can read any of these."
+                player "... didn't you write it?"
+                "Raddle" "Yeah... about that, sometime I come to work in a... sub-optimal state."
+                "Raddle" "That, coupled wth my bad handwriting... makes it that even I cant read my own headwritins at times."
+                "Raddle" "It's never been a problem so far becasuethe local phramacist was always able to read it."
+                "Raddle" "Plus, the mayor's handwriting is as bad as mine, so he can his assistant were always able to read my writing."
+            else:
+                "Raddle" "Sorry, I don't know anything about that."
+            jump doctorchoices
+            
+
+
+
+
+
 
 
 
@@ -356,6 +433,8 @@ label evidencemenu:
     $ chosenEvidence = 0
     menu:
         "What evidence should I present?"
+        "Victim's Body" if hasBody:
+            $ chosenEvidence = 0
         "Cause of death" if hasDeath:
             $ chosenEvidence = 1
         "Smell of almonds" if hasAlmond:
