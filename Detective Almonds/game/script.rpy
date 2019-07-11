@@ -22,8 +22,22 @@ define hazel = Character("Hazel")
 define doctor = Character("Doctor")
 default searchedbody = False
 default searcheddesk = False
+#Evidence
 default talkedisabelle = False
 default talkedresetti = False
+default hasDeath = False
+default hasAlmond = False
+default hasNote = False
+default hasRole = False
+default hasPamphelet = False
+default hasReceipt = False
+default hasThankYou = False
+default hasDebt = False
+default hasDoctor = False
+default hasEpipen = False
+default hasLunch = False
+default hasRing = False
+default hascyanide = False
 # The game starts here.
 
 label start:
@@ -113,12 +127,13 @@ label investigation:
                 jump body
             "Desk" if not searcheddesk:
                 jump desk
+            "Waste Basket" if not searchedTrash
             "Talk to Isabelle" if not talkedisabelle:
-	            $ talkedisabelle = True
-	            isabelle "I cannot believe this..."
+                $ talkedisabelle = True
+                isabelle "I cannot believe this..."
                 jump isabelleinvest
             "Talk to Mr.Resetti" if not talkedresetti:
-			    resetti "Urg... what a mess"
+                resetti "Urg... what a mess"
                 jump resettiinvest
     #jump finishedoffice
     return
@@ -128,9 +143,11 @@ label body:
     "You approch the body and notice several things:"
     "1) The victim appear to have died from asphyxiation"
 	"{i}{b}Cause of death {\b} is recorded in your notebook{/i}"
+	$ hasDeath = True
     "2) There is a smell of almonds near the victim's mouth"
     "3) That same almond smell is on a muffin, next to the mayor, half eaten"
 	"{i}{b}Smell of almonds{\b} is recorded in your notebook{/i}"
+	$ hasAlmond = True
     jump investigation
     return
 
@@ -143,6 +160,7 @@ label desk:
 	"You notice a note on the basket."
 	#show note
 	"{i}{b} Basket note{\b} is recorded in your notebook{/i}"
+	$ hasNote = True
 	return
 
 default askedSchedule = False
@@ -165,6 +183,7 @@ label isabelleinvest:
 				isabelle "That would be me... I'm in charge of everything the mayor does not want to handle."
 				player "I see, thank you for your time."
 	            "{i}{b}Role of Isabelle{\b} is recorded in your notebook{/i}"
+				$ hasRole = True
 				jump isabelleinvest
 	jump endofscene1
 	return
@@ -198,6 +217,7 @@ default currentHazel = False
 default currentHospital = False
 default currentShop = False 
 label choicemenu:
+    
     menu:
 		"Where should I go next?"
 
@@ -234,18 +254,19 @@ label nookShop:
 	jump nookmenu
 	return
 
-default chosenDeath = False
-default chosenAlmond = False
-default choseNote = False
-default chosenRole = False
-default chosenPamphelet = False
-default chosenReceipt = False
-default chosenThankYou = False
-default chosenDebt = False
-default chosenDoctor = False
-default chosenEpipen = False
-default chosenLunch = False
-default chosenRing = False
+# default chosenDeath = False
+# default chosenAlmond = False
+# default chosenNote = False
+# default chosenRole = False
+# default chosenPamphelet = False
+# default chosenReceipt = False
+# default chosenThankYou = False
+# default chosenDebt = False
+# default chosenDoctor = False
+# default chosenEpipen = False
+# default chosenLunch = False
+# default chosenRing = False
+default chosenEvidence = 0
 label nookmenu:
     menu:
 	    "What is that smell?":
@@ -255,46 +276,100 @@ label nookmenu:
 				    tom "Oh... well, you know, some chemicals, nothing wild."
 				"Present evidence":
 				     jump evidencemenu
+					 if chosenEvidence == 5:
+					     player "{i}Ah, i know what smell this is, the pamphelet mentioned it{/i}"
+					     player "Are you using cyanide?"
+						 tom "Wha- How did you know?!?"
+						 tom "Truth be told, I am using it. It's a dangerous substance, so I didnt tell people about it."
+						 tom "BUT don't worry! I'm using it very carefully, so the fumes aren't poisonous, you don't need to worry!"
+						 "{i}{b}Tom uses cyanide{\b} is recorded in your notebook.{/i}"
+						 $ hascyanide = True
+			jump nookmenu
+		"Did you give the mayor a gift this morning?":
+		    tom "I did! It's been 18 years since he's been living in this town, so I gave him a token of my appreciation."
+			player "Was it a gift basket?"
+			tom "Well, I can't really tell you what the gift was. It's a secret."
+			menu:
+			    "{i}Do I have any prrof of Tom's gift?{/i}"
+				"Yes":
+				    jump evidencemenu
+					if chosenEvidence == 3:
+						player ""
+				"No":
+				    player "I understand."
+			jump nookmenu
+
+		"Goodbye.":
+		    player "Thank you for your time"
+			$ currentKitty = False
+            $ currentHazel = False
+            $ currentHospital = False
+            $ currentShop = True 
+			jump choicemenu
+
+#scene 3
+
+label hospital:
+    "Nurse" "Hi, please fill in this form with your personal information and the reason for your visit and the doctor will get to you shortly."
+	"The nurse left quickly"
+	player "Wait, I'm not - And she's gone... darnit."
+	player "I guess I'll go to the receptionist."
+	player "Hi, I need to talk to the doctor."
+	"Receptionist" "Oh, no problem, here."
+	#show form
+	"Receptionist" "Please fill in this form with your personal information and the reason for your visit and the doctor wi-"
+	player "Wait, no, I'm not here for a consultation, I'm not sick! I just wanna talk."
+	"Receptionist" "Oh? Um... Ma'am, this is a hospital, we don't really do social events for the doctors."
+	player "No, I am a detective, I'm currently investigating a crime and I need to speak with the doctor."
+	"Receptionist" "Suuuuure... well, the doctor is going on his lunch break in a few minutes, so if you want, you can wait in the lobby, I'll tell him you're here"
+	player "Okay."
+	"As you are waiting, you pick up a pampthlet and start readin to pass the time."
+	#show pampthlet
+	#have pampthlet text here
+	"???" "Hello detective? I heard you were looking for me."
+	"You stopped reading and direct your attention to the voice."
+	player "Ah, hello, you must be the doctor."
+	"Doctor" "Yes, I'm the local town's doctor, Raddle, did you need anything?"
+	player "Well, Dr.Raddle- "
+	"Raddle" "Actually, just Raddle."
+	player "Ah... okay"
+	player "{i} Note to self, don't get sick here {/i}"
+	player "Anyways, Raddle, I am Detective [name]"
+
+
 
 
 label evidencemenu:
-    $ chosenDeath = False
-    $ chosenAlmond = False
-    $ choseNote = False
-    $ chosenRole = False
-    $ chosenPamphelet = False
-    $ chosenReceipt = False
-    $ chosenThankYou = False
-    $ chosenDebt = False
-    $ chosenDoctor = False
-    $ chosenEpipen = False
-    $ chosenLunch = False
-    $ chosenRing = False
+    $ chosenEvidence = 0
     menu:
-	    "Cause of death":
-		   pass
-	    "Smell of almonds":
-		   pass
-	    "Note of the basket":
-		   pass
-	    "Role of Isabelle":
-		   pass
-	    "Pamphelet":
-		   pass
-	    "Tom Nook's receipt":
-		   pass
-	    "Isabelle's Thank you note":
-		   pass
-	    "Kitty's testimony on the mayor's debt":
-		   pass
-	    "doctor's note":
-		   pass
-	    "Epipen":
-		   pass
-	    "Hazel's testimony":
-		   pass
-	    "Ring":
-		   pass
+	    "What evidence should I present?"
+	    "Cause of death" if hasDeath:
+		    $ chosenEvidence = 1
+	    "Smell of almonds" if hasAlmond:
+		    $ chosenEvidence = 2
+	    "Note of the basket" if hasNote:
+		    $ chosenEvidence = 3
+	    "Role of Isabelle" if hasRole:
+		    $ chosenEvidence = 4
+	    "Pamphelet" if hasPamphelet:
+		    $ chosenEvidence = 5
+	    "Tom Nook's receipt" if hasReceipt:
+		    $ chosenEvidence = 6
+	    "Isabelle's Thank you note" if hasThankYou:
+		    $ chosenEvidence = 7
+	    "Kitty's testimony on the mayor's debt" if hasDebt:
+		    $ chosenEvidence = 8
+	    "Doctor's note" if hasDoctor:
+		    $ chosenEvidence = 9
+	    "Epipen" if hasEpipen:
+		    $ chosenEvidence = 10
+	    "Hazel's testimony" if hasLunch:
+		    $ chosenEvidence = 11
+	    "Ring" if hasRing:
+		    $ chosenEvidence = 12
+		"Cyanide" if hascyanide:
+	        $ chosenEvidence = 13
+	return
     # This ends the game.
 return
     
