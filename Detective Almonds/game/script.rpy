@@ -15,7 +15,6 @@
 # name of the character.
 
 define isabelle = Character("Isabelle")
-define kitty = Character("Kitty")
 define resetti = Character("Mr.Resetti")
 define tom = Character("Tom Nook")
 define hazel = Character("Hazel")
@@ -35,7 +34,6 @@ default hasRole = False
 default hasPamphelet = False
 default hasReceipt = False
 default hasThankYou = False
-default hasDebt = False
 default hasDoctor = False
 default hasEpipen = False
 default hasLunch = False
@@ -178,6 +176,10 @@ label desk:
     #show note
     "{i}{b} Basket note{/b} is recorded in your notebook{/i}"
     $ hasNote = True
+    player "I should probabaly also check the drawers."
+    "{i} Raddle Raddle {/i}"
+    player "Huh locked."
+
     jump investigation
     return
 
@@ -230,10 +232,10 @@ label endofscene1:
     return
 
 
-default currentKitty = False
 default currentHazel = False
 default currentHospital = False
 default currentShop = False 
+default currentOffice = True
 label choicemenu:
     
     menu:
@@ -248,8 +250,8 @@ label choicemenu:
         "Go talk to Hazel" if not currentHazel:
             jump hazelpicnic
 
-        "Go talk to Kitty" if not currentKitty:
-            jump kitty
+        "Go back to the mayor's office" if not cuurentOffice:
+            jump officeAgain
     return
 
 
@@ -311,17 +313,17 @@ label nookmenu:
             jump nookmenu
         "Why did you go see the mayor this morning?":
             tom "Oh, well, it's been 18 years since he's been living in this town, so I gave him a token of my appreciation."
-            player "what was it?"
+            player "What was it?"
             tom "Well, I can't really tell you what the gift was. It's a secret."
             giftproof1
             
 
         "Goodbye.":
             player "Thank you for your time"
-            $ currentKitty = False
             $ currentHazel = False
             $ currentHospital = False
             $ currentShop = True 
+            $ currentOffice = False
             jump choicemenu
 
 label giftproof1:
@@ -335,12 +337,66 @@ label giftproof1:
                 player "QUIT LYING! I HAVE A NOTE RIGHT HERE! The basket came from you!"
                 tom "What? This isnt mine!"
                 player "Well, how do you explain the note?"
-                tom "I swear to god, I don't know where it came from. Plus, anyone can write a note!"
+                tom "I swear to god, I don't know where it came from. Plus, it's not like it matters! How does the gift basket plays in the mayor's death?"
                 jump giftproof2
             else:
                 tom "Um... what is that?"
                 player "Sorry, wrong item."
                 jump giftproof1
+
+        "No":
+            player "{i}I need to gather more evidence to pursue this line of questioning.{/i}"
+            player "I understand."
+            jump nookmenu
+
+label giftproof2:
+    player "{i}I do have proof the basket are linked to the mayor's death. I'll present it now!{/i}"
+    jump evidencemenu
+    if chosenEvidence == 2:
+        player "A half-eaten muffin from the gift basket was found next to the body!"
+        player "Plus, his breath clearly smelled of almonds, the same smell from the muffin!"
+        tom "SO?! HOW DOES A MUFFIN KILL SOMEONE! DON'T JUST ACCUSE ME OF SH#T!"
+        jump giftproof3
+    else:
+        tom "How does this link the basket to the death?"
+        player "Sorry, wrong item."
+        jump giftproof2
+    return
+
+label giftproof3:
+     menu:
+        "{i}Do I have any proof that the muffin killed the mayor?{/i}"
+        "Yes":
+            jump evidencemenu
+            if chosenEvidence == 13:
+                player "The cyanide."
+                tom "Pardon me?"
+                player "The muffin had an almond smell to it, much like the rest of this room... and the muffin."
+                player "Cyanide produce a smell very similar to almonds and is a lethal poison when injested... making it a perfect murder weapon."
+                tom "What are you trying to say?"
+                player "I think you know very well what i'm tring to say."
+                player "I am accusing you of givig poisonned muffin to the mayor!"
+                tom "Look, I swear, I didn't give the mayor the gift basket!"
+                player "The evidence doesn't lie! unless you can prove to me you didn't give the basket, I'm arresting you for murder."
+                tom "Fine... I'll give you proof."
+                tom "I didn't want to do this, to save the mayor's reputation, but I don't have a choice at this point."
+                "From the pocket of his apron, Tom pulled out a piece of paper."
+                #show paper
+                player "What is this?"
+                tom "A settlement contract."
+                player "What?"
+                tom "It's basically just a contract whihc nullifies the debt of the mayor."
+                player "Wait, the mayor owed you money?!"
+                tom "Quite a bit too, he never managed to pay it off. It was his biggest shame."
+                tom "However, overtime, I saw how much his presence benifited the community, so I decided to nullify his debt, as a gitf to him."
+                tom "You see? Signed by me and him, this morning. I did not give him the dumb basket!"
+                "{i}{b}Tom's Contract{/b} is recorded in your notebook.{/i}"
+                player "I see, thank you for the information"
+                jump nookmenu
+            else:
+                tom "Um... what is that?"
+                player "Sorry, wrong item."
+                jump giftproof3
 
         "No":
             player "{i}I need to gather more evidence to pursue this line of questioning.{/i}"
@@ -419,6 +475,11 @@ label doctorchoices:
             else:
                 "Raddle" "Sorry, I don't know anything about that."
             jump doctorchoices
+        "Goodbye":
+            $ currentHazel = False
+            $ currentHospital = True
+            $ currentShop = False 
+            $ currentOffice = False
             
 
 
@@ -437,7 +498,7 @@ label evidencemenu:
             $ chosenEvidence = 0
         "Cause of death" if hasDeath:
             $ chosenEvidence = 1
-        "Smell of almonds" if hasAlmond:
+        "Smell of almonds on mouth and muffin" if hasAlmond:
             $ chosenEvidence = 2
         "Note of the basket" if hasNote:
             $ chosenEvidence = 3
@@ -445,12 +506,10 @@ label evidencemenu:
             $ chosenEvidence = 4
         "Pamphelet" if hasPamphelet:
             $ chosenEvidence = 5
-        "Tom Nook's receipt" if hasReceipt:
+        "Tom Nook's contract" if hasReceipt:
             $ chosenEvidence = 6
         "Isabelle's Thank you note" if hasThankYou:
             $ chosenEvidence = 7
-        "Kitty's testimony on the mayor's debt" if hasDebt:
-            $ chosenEvidence = 8
         "Doctor's note" if hasDoctor:
             $ chosenEvidence = 9
         "Epipen" if hasEpipen:
