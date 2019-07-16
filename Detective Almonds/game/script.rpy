@@ -576,7 +576,7 @@ label officeagain:
     player "Excuse me?"
     isabelle " I've been doing a little bit of investigation myself, and I think it's pretty obvous who the killer is."
     player "Is it now?"
-    isabelle "Oh c'mon! "
+    isabelle "Oh c'mon! It's so obvios! It's that crook Tom Nook!"
     player 
 
 label evidencemenu:
