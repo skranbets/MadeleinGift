@@ -179,7 +179,8 @@ label desk:
     player "I should probabaly also check the drawers."
     "{i} Raddle Raddle {/i}"
     player "Huh locked."
-
+    player "Hey Mr. Resetti, do you have a key for this?"
+    resetti "SOrry man, I didn't bring that desk in, so i don't have the key, only the mayor has it."
     jump investigation
     return
 
@@ -208,8 +209,6 @@ label isabelleinvest:
     jump investigation
     return
 
-
-
 label resettiinvest:
     player "This is a true tragedy."
     resetti "Yeah... I feel really bad about my comment now."
@@ -232,31 +231,46 @@ label endofscene1:
     return
 
 
-default currentHazel = False
+default talkedHazel = False
+default checkedHospital = False
 default currentHospital = False
+default checkedShop = False
 default currentShop = False 
-default currentOffice = True
 label choicemenu:
+    if checkedHospital and checkedShop and talkedHazel and hasReceipt:
+        menu:
+            "Where should I go next?"
+
+            "Go to Tom Nook's shop" if not currentShop:
+                jump nookShop
+
+            "Go to the hospital" if not currentHospital:
+                jump hospital
+
+            "Go talk to Hazel" if not talkedHazel:
+                jump hazelpicnic
+    else:
+        player "Well, I think that is all the evidences I am going to get."
+        player "I should probably head back to the crime scene."
+        jump officeagain
+        
     
-    menu:
-        "Where should I go next?"
-
-        "Go to Tom Nook's shop" if not currentShop:
-            jump nookShop
-
-        "Go to the hospital" if not currentHospital:
-            jump hospital
-
-        "Go talk to Hazel" if not currentHazel:
-            jump hazelpicnic
-
-        "Go back to the mayor's office" if not cuurentOffice:
-            jump officeAgain
     return
 
 
 # scene two
 label nookShop:
+    if checkedShop:
+        "You enter the shop again, the scent of almond still overwhelming."
+        player "Hey Tom, you there? I need to talk with you again."
+        tom "Coming!"
+        #show nook
+        tom "What did you need?"
+        jump nookmenu
+    else:
+        jump nookShopinitial
+
+label nookShopinitial:
     #new sceneries
     #tom nook enters
     "As you enters the shop, a strong scent of almonds assualts your senses."
@@ -320,10 +334,9 @@ label nookmenu:
 
         "Goodbye.":
             player "Thank you for your time"
-            $ currentHazel = False
             $ currentHospital = False
+            $ checkedShop = True
             $ currentShop = True 
-            $ currentOffice = False
             jump choicemenu
 
 label giftproof1:
@@ -391,6 +404,7 @@ label giftproof3:
                 tom "However, overtime, I saw how much his presence benifited the community, so I decided to nullify his debt, as a gitf to him."
                 tom "You see? Signed by me and him, this morning. I did not give him the dumb basket!"
                 "{i}{b}Tom's Contract{/b} is recorded in your notebook.{/i}"
+                $ hasReceipt = True
                 player "I see, thank you for the information"
                 jump nookmenu
             else:
@@ -403,8 +417,15 @@ label giftproof3:
             player "I understand."
             jump nookmenu
 #scene 3
-
 label hospital:
+    if checkedHospital:
+        "raddle" "Oh you're back."
+        player "yeah, I wanted to talk to you more."
+        jump doctorchoices
+    else:
+        jump hospitalinitial
+    
+label hospitalinitial:
     "Nurse" "Hi, please fill in this form with your personal information and the reason for your visit and the doctor will get to you shortly."
     "The nurse left quickly"
     player "Wait, I'm not - And she's gone... darnit."
@@ -476,19 +497,87 @@ label doctorchoices:
                 "Raddle" "Sorry, I don't know anything about that."
             jump doctorchoices
         "Goodbye":
-            $ currentHazel = False
             $ currentHospital = True
+            $ checkedHospital = True
             $ currentShop = False 
-            $ currentOffice = False
+            jump choicemenu
             
+label hazelpicnic:
+    "You walk toward the address Isabelle gave you for Hazel."
+    "{i}Knock Knock{/i}"
+    "The door opens and a homanoid squirrel comes out."
+    "???" "Hello, may I help you?"
+    player "Good morning ma'am, I'm Detective [name] and I'm here to talk with Hazel."
+    hazel "That would be me."
+    player "Hello Ms.Hazel. I would just like to ask you a few questions, if you don't mind."
+    hazel "Um... sure, please go ahead."
+    player "What is your relationship with the mayor?":
+    hazel "We are... really good friends."
+    "You notice a blush on Hazel's cheeks"
+    hazel "We meet up almost everyday at the park to eat lunch together!"
+    player "Oh that's lovely, did you meet him today as well?"
+    hazel "Not yet, but we did have lunch plans, so I was making my lunch right now."
+    hazel "I love making food and cooking. In fact, I suggested on many occasions to make the mayor's lunch."
+    player "I'm sure the mayor appreciated that, it should save him time to make food."
+    hazel "Actually, he never took me up on my offer. For some reason, he always kept his food away from mine."
+    hazel "He won't even taste my famous nut muffins."
+    hazel "I don't know why though, even Isabelle likes them."
+    player "Really?"
+    hazel "Yeah, she even asked me to show her the recipe a while back. We had a fun day cooking."
+    hazel "She even sent me a thank you note."
+    #show note
+    $ hasThankYou = True
+    hazel "Um, if you don't mind, Detective, can I ask you a question of my own."
+    player "Sure, no problem."
+    hazel "Why are you questionning me? Did something happen?"
+    player "..."
+    hazel "Detective?"
+    player "I'm sorry... But the mayor was found dead this morning in this office."
+    hazel "Oh no... Mayor..."
+    "Hazel falls to her knees, collapsing in tears."
+    hazel "C-can you tell me what happened to him?"
+    player "He died in his office, we don't know what happened to him, so I'm investigating it."
+    player "I'm sorry to be the bearer of bad news, but I needed to gather information for the investigation."
+    hazel "Actually, I might have something that may help you."
+    "Hazel gets a key out from her pocket."
+    hazel "The mayor gave me this... he said it would be useful one day. Maybe it could help you in your investigation."
+    player "Thank you very much. I really appreciate your help."
+    hazel "No need to thank me, just promise me: please find oyt what happened to him... please."
+    player "I will try my best hazel, trust me."
+    hazel "Thank you... Now if you could excuse me, I need time alone."
+    "The door closes and you could hear lund weeping from the other side."
+    jump choicemenu
+    $ talkedHazel = True
+    $ currentHospital = True
+    $ currentShop = False 
+    return
 
-
-
-
-
-
-
-
+label officeagain:
+    "You walk back to the crime scene."
+    player "Now that I have the key, I should check out that locked drawer."
+    "You opened the drawer and found some things."
+    #show epipen
+    player "This is weird, why in the world would he lock this?"
+    player "Oh, it seems like this was already used."
+    player "I wonder why he didn't just throw it away."
+    player "There some more stuff."
+    #show picture
+    player "Awn, a picture of the mayor and hazel, they look happy."
+    player "Wonder what's in this box"
+    #show ring 
+    player "Oh my... this seems very expensive."
+    "???" "So, any progress?"
+    player "AH!"
+    isabelle "What's wrong?"
+    player "Nothing... You just suprised me."
+    isabelle "Do you have any update on the situation?"
+    player "I was still investigati-"
+    isabelle "Well, it's okay, I think there's no need to continue it."
+    player "Excuse me?"
+    isabelle " I've been doing a little bit of investigation myself, and I think it's pretty obvous who the killer is."
+    player "Is it now?"
+    isabelle "Oh c'mon! "
+    player 
 
 label evidencemenu:
     $ chosenEvidence = 0
