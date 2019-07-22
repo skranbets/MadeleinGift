@@ -577,7 +577,22 @@ label officeagain:
     isabelle " I've been doing a little bit of investigation myself, and I think it's pretty obvous who the killer is."
     player "Is it now?"
     isabelle "Oh c'mon! It's so obvious! It's that crook Tom Nook!"
-    player 
+    player "What makes you say that?"
+    isabelle "You're kidding right? The mayor's breath smell like almond, Tom owns Cyanide, Tom gave the mayor the almond-scented muffin."\
+    isabelle "He sooo obviously the killer, let's go arrest him right now."
+    menu:
+        "Yeah, let's go.":
+            player "{i} Wait, I don't think that's correct, I need to correct her {/i}"
+            jump next2
+        "I don't think so.":
+            jump next2
+    return
+
+label next2:
+    player "I talked with Tom and I don't think he's the killer."
+    isabelle
+
+
 
 label evidencemenu:
     $ chosenEvidence = 0
