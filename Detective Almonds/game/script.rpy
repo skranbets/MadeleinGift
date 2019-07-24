@@ -36,7 +36,6 @@ default hasReceipt = False
 default hasThankYou = False
 default hasDoctor = False
 default hasEpipen = False
-default hasLunch = False
 default hasRing = False
 default hascyanide = False
 # The game starts here.
@@ -290,19 +289,6 @@ label nookShopinitial:
     tom "Sure..."
     jump nookmenu
     return
-
-# default chosenDeath = False
-# default chosenAlmond = False
-# default chosenNote = False
-# default chosenRole = False
-# default chosenPamphelet = False
-# default chosenReceipt = False
-# default chosenThankYou = False
-# default chosenDebt = False
-# default chosenDoctor = False
-# default chosenEpipen = False
-# default chosenLunch = False
-# default chosenRing = False
 default chosenEvidence = 0
 label nookmenu:
     menu:
@@ -473,6 +459,7 @@ label doctorchoices:
             "{i}{b}Faxed Doctor Notes{/b} is recorded in your notebook.{/i}"
             jump doctorchoices
         "Can I ask your opinion on this evidence?":
+            jump evidencemenu
             if chosenEvidence == 0:
                 player "I found the body of the president and I was wondering if you could help me determine the cause of death."
                 player "Here's a picture of the body."
@@ -590,7 +577,118 @@ label officeagain:
 
 label next2:
     player "I talked with Tom and I don't think he's the killer."
-    isabelle
+    isabelle "Excuse me?"
+    player "He told me he never gave the gift basket. The gift he did give was something else."
+    isabelle "Oh cmon detective, you dont honestly belive that right? He was definitely lying!"
+    menu:
+        "Yeah you're right, let's go arrest the bastard":
+            player  "{i} Wait, that can't be right, Tom gave me proof of his real gift {/i}"
+            jump next3
+        "I do believe Tom":
+            jump next3
+    return
+
+label next3:
+    player "I believe Tom's words."
+    isabelle "What? How? Do you have any proof?"
+    player "I do."
+    jump next4
+    return
+
+label next4:
+    jump evidencemenu
+    if chosenEvidence == 6:
+        player "He did not give a gift basket, he gave the mayor this."
+        isabelle "What's this?"
+        player "A debt nullification contract. He made all of the mayor's debts null."
+        isabelle "SO? he could have given two gifts!"
+        player "That's impossible, and I have proof of it"
+        jump next5
+    else:
+        isabelle "What's that?"
+        player "Whoops, sorry wrong item."
+    return
+
+label next5:
+    jump evidencemenu
+    if chosenEvidence == 6 or chosenEvidence == 3:
+        player "Take a look at the signature."
+        isabelle "Yeah, I saw that, both were signed by him. Doesn't that support my argument?"
+        player "Just take a closer look to the signatures."
+        isabelle "AH! The handwritings..."
+        player "Exactly, the handwriting are differengt on both papers."
+        isabelle "What does that mean?"
+        player "I think that means someone as trying to frame our good local merchant."
+        isabelle "Oh my, if only there was a way to figure out who wrote the basket note"
+        player "Actually, I think we can."
+        jump next6
+    else:
+        isabelle "What's that?"
+        player "Whoops, sorry wrong item."
+    return
+
+label next6:
+    jump evidencemenu
+     jump evidencemenu
+    if chosenEvidence == 7:
+        player "Isabelle. You spent some time with Hazel recently haven't you?"
+        isabelle "Oh, yes, we spend a day baking."
+        player "I see, well, it seems you also sent her a thank you note."
+        iabelle "Of course, it is good manners after all!"
+        player "Well then, can you please explain why your signature on the thank you note is IDENTICAL to the one on the goft basket"
+        isabelle "AH!"
+        player "You were the one that gave the poisoned muffins to the myor wasn't it?"
+        player "You tried to frame Tom Nook because you knew he brought a gift for the mayor!"
+        isabelle "NO! you're wrong!"
+        isabelle "The mayor died from the cyanide! remember? Only Tom had access to it! How could I have killed him?"
+        jump next7
+    else:
+        isabelle "How does that help us?"
+        player "Whoops, sorry wrong evidence."
+    return
+
+label next7:
+    jump evidencemenu
+    if chosenEvidence == 10:
+        player "Who said the mayor was killed by cyanide?"
+        isabelle "Huh?"
+        player "I'm asking you, why do you think the mayor died from cyanide?"
+        isabelle "Well, obviously the almond scent."
+        "You walk toward the muffins and pick one up."
+        player "You're talking about these \"poisoned\" muffins?"
+        isabelle "Um, you should not touch tha-"
+        "You take a bite from the muffin."
+        isabelle "WAIT NO!"
+        player "Miam, delicious, the almonds REALLY brings out the flavors."
+        player "Sadly, I taste no cyanide..."
+        isabelle "Oh... Looks like you were lucky there... the killer probabky only poisoned one of them..."
+        player "Mmmm, I have a different theory."
+        "You pull out the epipen from your pockets."
+        player "I think these are just normal muffin, but they kiolled the mayor due to his deadly nuts allergies."
+        isabelle "The mayor had nuts allergies? Who would have known?"
+        player "Exactly! The mayor kept it pretty under wraps. Only him and his doctor would know."
+        player "Except... according to the doctor, they called the mayor's office with his allergy results and you were the one who picked up."
+        player "Meaning, you, Isabelle, also knows."
+        isabelle "Wha- No, it.. I never got a call! I don't get calls!"
+        player "Admit it! you found out about the mayor's allergies, had Hazel teach you a nut muffin recipe, gave it to the mayor and tied to frame Tom."
+        player "YOU, ISABELLE, ARE THE KILLER!"
+        isabelle "I...I'm sorry....."
+        isabelle "I... I JUST COULDN'T TAKE IT ANYMORE!"
+        isabelle "The mayor is never here and I walways have to deal with his mess!"
+        isabelle "I alwysy have to do all of his work! And I am never appreciated!"
+        isabelle "He gets love from the communityfor the work I do! All he ever does is slack off!"
+        isabelle "I-I just couldn't take it anymore..."
+        player "Save it for the court, sweetie."
+        "And so, Isabelle was sentenced to 15 years in prison, and the town elected a new mayor: Tom Nook."
+        "The End"
+        return
+    else:
+        isabelle "How does that help us?"
+        player "Whoops, sorry wrong evidence."
+    return
+
+
+
 
 
 
@@ -618,10 +716,6 @@ label evidencemenu:
             $ chosenEvidence = 9
         "Epipen" if hasEpipen:
             $ chosenEvidence = 10
-        "Hazel's testimony" if hasLunch:
-            $ chosenEvidence = 11
-        "Ring" if hasRing:
-            $ chosenEvidence = 12
         "Cyanide" if hascyanide:
             $ chosenEvidence = 13
     return
